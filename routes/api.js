@@ -79,7 +79,7 @@ module.exports = function (app) {
 
       let { open } = req.body;
 
-      if (!_id) return res.json({ error: "missing _id " });
+      if (!_id) return res.json({ error: "missing _id" });
 
       const updateFields = {};
 
