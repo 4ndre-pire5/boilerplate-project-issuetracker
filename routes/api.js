@@ -44,8 +44,18 @@ module.exports = function (app) {
     })
 
 
-    .get(function (req, res) {
+    .get(async function (req, res) {
       let project = req.params.project;
+      const query = req.query;
+
+      try {
+        const issues = await Issue.find({ project, ...query }).exec();
+        return res.json(issues);
+
+      } catch (err){
+        console.error(err);
+        return res.json({ error: "could not fetch issues" });
+      }
 
     })
 
