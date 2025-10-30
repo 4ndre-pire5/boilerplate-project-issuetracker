@@ -193,13 +193,57 @@ suite('PUT /api/issues/{project}', () => {
                 done();
             });
     });
+});
 
+suite('DELETE /api/issues/{project}', () => {
+    test('Delete an issue', (done) => {
+        chai.request(server)
+            .delete('/api/issues/testproject')
+            .send({
+                _id: testId,
+            })
+            .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.result, 'successfully deleted');
+                assert.equal(res.body._id, testId);
+                done();
+            });
+    });
 
+    test('Delete an issue wth an invalid _id', (done) => {
+        chai.request(server)
+            .delete('/api/issues/testproject')
+            .send({
+                _id: 'abcdef0123456789abcdef01',
+                issue_title: 'Não deleta com _id errado'
+            })
+            .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.property(res.body, 'error');
+                assert.equal(res.body.error, 'could not delete');
+                assert.equal(res.body._id, 'abcdef0123456789abcdef01');
+                done();
+            });
+    });
 
+    test('Delete an issue wth missing _id', (done) => {
+        chai.request(server)
+            .delete('/api/issues/testproject')
+            .send({
+                issue_title: 'Não deleta faltando _id'
+            })
+            .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.property(res.body, 'error');
+                assert.equal(res.body.error, 'missing _id');
+                done();
+            });
+    });
 
 
 
 });
+
 
 
 
